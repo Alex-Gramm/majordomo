@@ -47,7 +47,7 @@ $requests = array(
    "/^\/docs\/(\d+)\.html/is"         => '?(application:{action=docs, doc_id=\1})',
    "/^\/([\w-]+)\.html/is"            => '?(application:{action=docs, doc_name=\1})'
 );
-
+$found = false;
 foreach($requests as $key=>$value) 
 {
    if (!$found && preg_match($key, $_SERVER["REQUEST_URI"], $matches)) 
@@ -59,7 +59,7 @@ foreach($requests as $key=>$value)
       }
   
       $link = preg_replace('/\\\\(\d+?)/is', '', $link);
-      $found = 1;
+      $found = true;
    }
 }
 

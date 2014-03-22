@@ -128,6 +128,7 @@ Define("EQ_DELIMITER", "qz_");
 */
   function createParamsString($data, $name) {
    $params="";
+   $params1=array();
    foreach($data as $k=>$v) {
     if ($v=="") {
      UnSet($data[$k]);
@@ -636,7 +637,7 @@ Define("EQ_DELIMITER", "qz_");
  function parseLinks($result) {
    global $PHP_SELF;
    global $md;
-
+   $param_str="";
    if (!IsSet($_SERVER['PHP_SELF'])) {
     $_SERVER['PHP_SELF']=$PHP_SELF;
    }
@@ -720,9 +721,9 @@ Define("EQ_DELIMITER", "qz_");
 * @access private
 */
  function codeParams($in) {
-
+      $res_str="";
       if (preg_match_all('/(.+?):{(.+?)}/', $in, $matches2, PREG_PATTERN_ORDER)) {
-       for($k=0;$k<count($matches2);$k++) {
+       for($k=0;$k<count($matches2[1]);$k++) {
         $data=array();
         $module_name=$matches2[1][$k];
         $module_params=explode(',',$matches2[2][$k]);
