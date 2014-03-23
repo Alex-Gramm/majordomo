@@ -10,13 +10,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="<#ROOTHTML#>bootstrap/css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="<#ROOTHTML#>css/admin.css" type="text/css">
-<link rel="stylesheet" type="text/css" href="/css/umbra-css2/style.css" title="theme"/>
+<link rel="stylesheet" type="text/css" href="<#ROOTHTML#>css/umbra-css2/style.css" title="theme"/>
   <link rel="stylesheet" href="<#ROOTHTML#>css/jquery.autocomplete.css" type="text/css">
   <link rel="stylesheet" href="<#ROOTHTML#>css/jquery.fancybox.css" type="text/css">
   <link rel="stylesheet" href="<#ROOTHTML#>css/jquery.betterTooltip.css" type="text/css">
 
 
-<script language="javascript" src="/jquerymobile/jquery-1.10.2.min.js"></script>
+<script language="javascript" src="<#ROOTHTML#>jquerymobile/jquery-1.10.2.min.js"></script>
 
   <script type="text/javascript" src="<#ROOTHTML#>bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="<#ROOTHTML#>js/jquery.cookie.js"></script>
@@ -24,11 +24,11 @@
   <script type="text/javascript" src="<#ROOTHTML#>js/jquery.autocomplete.js"></script>
   <script type="text/javascript" src="<#ROOTHTML#>js/jquery.bgiframe.js"></script>
   <script type="text/javascript" src="<#ROOTHTML#>js/jquery.betterTooltip.js"></script>
-  <script language="javascript" type="text/javascript" src="/js/jWindow.js"></script>
+  <script language="javascript" type="text/javascript" src="<#ROOTHTML#>js/jWindow.js"></script>
 
-<script language="javascript" src="/js/scripts.js"></script>
-<script language="javascript" src="/js/system.js"></script>
-<script language="javascript" src="/js/admin.js"></script>
+<script language="javascript" src="<#ROOTHTML#>js/scripts.js"></script>
+<script language="javascript" src="<#ROOTHTML#>js/system.js"></script>
+<script language="javascript" src="<#ROOTHTML#>js/admin.js"></script>
 
 
 [#inc scripts.js#]
@@ -63,6 +63,31 @@
           }
          }
 
+ var filterTimer;
+
+
+ function filterSearch() {
+  var title=document.frmFilterModules.filter_modules.value;
+  //$('#filter_add').html(title);
+ var url="?";
+ url+='&ajax_panel=1&op=filter&title='+encodeURIComponent(title);
+
+ $.ajax({
+   url: url
+  }).done(function(data) { 
+   $('#filter_add').html(data);
+  });
+
+
+  return false;
+ }
+
+ function setFilter(value) {
+  $('#filter_modules').val(value);
+  filterSearch();
+  return false;
+ }
+
  function filterModules() {
   var title=document.frmFilterModules.filter_modules.value;
   var moduleTitle='';
@@ -72,6 +97,16 @@
   setCookie('panelFilter', title);
 
   title=title.toLowerCase();
+
+  if (title!='') {
+   $('#filter_add').html('...');
+   $('#filter_add').show();
+   clearTimeout(filterTimer);
+   filterTimer=setTimeout('filterSearch();', 1000);
+  } else {
+   $('#filter_add').hide();
+   clearTimeout(filterTimer);
+  }
 
   var found=0;
   var i=0;
@@ -159,7 +194,7 @@ margin: 10px 0;
 <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
                 <div class="container">
-                <a class="brand" href="/"><#SETTINGS_SITE_TITLE#> // <span class="color-white"><#LANG_CONTROL_PANEL#></span></a>
+                <a class="brand" href="<#ROOTHTML#>"><#SETTINGS_SITE_TITLE#> // <span class="color-white"><#LANG_CONTROL_PANEL#></span></a>
                         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
                         <div class="nav-collapse">
                                 <ul class="nav">
@@ -214,7 +249,9 @@ margin: 10px 0;
 [#if PRINT!="1"#]
 <td class="well sidebar-left"><!--left_main-->
 
-<form id="filterModules" class="form-horizontal" name="frmFilterModules"><div class="input-prepend"><span class="add-on"><i class="icon-search"> </i></span><input type="text" name="filter_modules" style="width: 140px" placeholder="<#LANG_FILTER#>"></div></form>
+<form id="filterModules" class="form-horizontal" name="frmFilterModules"><div class="input-prepend"><span class="add-on"><i class="icon-search"> </i></span><input type="text" name="filter_modules" id="filter_modules" style="width: 140px" placeholder="<#LANG_FILTER#>"></div></form>
+
+<div id='filter_add' style='display:none;text-overflow:hidden;white-space:nowrap;'>...</div>
 
         <!--[menu]-->
 
